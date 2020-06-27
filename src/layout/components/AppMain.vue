@@ -1,9 +1,19 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="cachedViews">
-        <router-view :key="key" />
-      </keep-alive>
+      <template v-if="isSubApp">
+        <div>
+          <div id="page-charts" />
+          <div id="page-components" />
+          <div id="page-nested" />
+          <div id="page-table" />
+        </div>
+      </template>
+      <template v-else>
+        <keep-alive :include="cachedViews">
+          <router-view :key="key" />
+        </keep-alive>
+      </template>
     </transition>
   </section>
 </template>
@@ -11,12 +21,35 @@
 <script>
 export default {
   name: 'AppMain',
+  data() {
+    return {
+      isSubApp: false
+    }
+  },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
     },
     key() {
       return this.$route.path
+    }
+    // isSubApp() {
+    //   const hash = window.location.hash || ''
+    //   const isSub = ['charts', 'components', 'nested', 'table'].some(key => {
+    //     return hash.startsWith(`#/${key}`)
+    //   })
+    //   console.log('isSub', isSub)
+    //   return isSub
+    // }
+  },
+  watch: {
+    $route() {
+      const hash = window.location.hash || ''
+      const isSub = ['charts', 'components', 'nested', 'table'].some(key => {
+        return hash.startsWith(`#/${key}`)
+      })
+      console.log('isSub', isSub)
+      this.isSubApp = isSub
     }
   }
 }

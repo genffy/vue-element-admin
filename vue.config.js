@@ -18,11 +18,16 @@ try {
       filename: process.env.NODE_ENV === 'development' ? `${fileName}.html` : `${fileName}/${fileName}.html`
     }
   })
+  // 需要添加下默认的页面，不然会报错
+  // URIError: Failed to decode param '/%3C%=%20BASE_URL%20%%3Efavicon.ico'
+  pages['index'] = {
+    entry: `src/main.js`
+  }
 } catch (e) {
   console.error('Get pages error')
 }
 
-const name = defaultSettings.title || 'vue Element Admin' // page title
+const name = defaultSettings.title || 'VueElementAdmin' // page title
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
@@ -63,6 +68,12 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
+    },
+    output: {
+      // 把子应用打包成 umd 库格式
+      library: `${name}-[name]`,
+      libraryTarget: 'umd',
+      jsonpFunction: `webpackJsonp_${name}`
     }
   },
   chainWebpack(config) {

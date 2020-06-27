@@ -5,7 +5,7 @@ import Layout from '@/layout'
 const componentsRouter = {
   path: '/components',
   component: Layout,
-  redirect: 'noRedirect',
+  redirect: '/components/tinymce',
   name: 'ComponentDemo',
   meta: {
     title: 'Components',

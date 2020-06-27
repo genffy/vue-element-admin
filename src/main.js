@@ -20,6 +20,9 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
+// qiankun
+import { registerMicroApps, start } from 'qiankun'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -45,9 +48,65 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.productionTip = false
 
+try {
+  registerMicroApps([
+    {
+      name: 'chartsPage', // app name registered
+      // entry: '//localhost:9527/charts.html',
+      entry: { scripts: ['//localhost:9527/static/js/charts.js'] },
+      container: '#page-charts',
+      activeRule: (location) => {
+        const isActive = location.hash.startsWith('#/charts')
+        console.log('chartsPage isActive', isActive)
+        return isActive
+      }
+    },
+    {
+      name: 'componentsPage', // app name registered
+      // entry: '//localhost:9527/components.html',
+      entry: { scripts: ['//localhost:9527/static/js/components.js'] },
+      container: '#page-components',
+      activeRule: (location) => {
+        const isActive = location.hash.startsWith('#/components')
+        console.log('componentsPage isActive', isActive)
+        return isActive
+      }
+    },
+    {
+      name: 'nestedPage', // app name registered
+      // entry: '//localhost:9527/nested.html',
+      entry: { scripts: ['//localhost:9527/static/js/nested.js'] },
+      container: '#page-nested',
+      activeRule: (location) => {
+        const isActive = location.hash.startsWith('#/nested')
+        console.log('nestedPage isActive', isActive)
+        return isActive
+      }
+    },
+    {
+      name: 'tablePage', // app name registered
+      // entry: '//localhost:9527/table.html',
+      entry: { scripts: ['//localhost:9527/static/js/table.js'] },
+      container: '#page-table',
+      activeRule: (location) => {
+        const isActive = location.hash.startsWith('#/table')
+        console.log('tablePage isActive', isActive)
+        return isActive
+      }
+    }
+  ])
+} catch (e) {
+  console.error('注册/启动子应用失败')
+}
+
 new Vue({
   el: '#app',
   router,
   store,
+  mounted() {
+    setTimeout(() => {
+      start()
+    })
+  },
   render: h => h(App)
 })
