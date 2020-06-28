@@ -48,57 +48,6 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.productionTip = false
 
-try {
-  registerMicroApps([
-    {
-      name: 'chartsPage', // app name registered
-      // entry: '//localhost:9527/charts.html',
-      entry: { scripts: ['//localhost:9527/static/js/charts.js'] },
-      container: '#page-charts',
-      activeRule: (location) => {
-        const isActive = location.hash.startsWith('#/charts')
-        console.log('chartsPage isActive', isActive)
-        return isActive
-      }
-    },
-    {
-      name: 'componentsPage', // app name registered
-      // entry: '//localhost:9527/components.html',
-      entry: { scripts: ['//localhost:9527/static/js/components.js'] },
-      container: '#page-components',
-      activeRule: (location) => {
-        const isActive = location.hash.startsWith('#/components')
-        console.log('componentsPage isActive', isActive)
-        return isActive
-      }
-    },
-    {
-      name: 'nestedPage', // app name registered
-      // entry: '//localhost:9527/nested.html',
-      entry: { scripts: ['//localhost:9527/static/js/nested.js'] },
-      container: '#page-nested',
-      activeRule: (location) => {
-        const isActive = location.hash.startsWith('#/nested')
-        console.log('nestedPage isActive', isActive)
-        return isActive
-      }
-    },
-    {
-      name: 'tablePage', // app name registered
-      // entry: '//localhost:9527/table.html',
-      entry: { scripts: ['//localhost:9527/static/js/table.js'] },
-      container: '#page-table',
-      activeRule: (location) => {
-        const isActive = location.hash.startsWith('#/table')
-        console.log('tablePage isActive', isActive)
-        return isActive
-      }
-    }
-  ])
-} catch (e) {
-  console.error('注册/启动子应用失败')
-}
-
 new Vue({
   el: '#app',
   router,
@@ -110,3 +59,53 @@ new Vue({
   },
   render: h => h(App)
 })
+try {
+  registerMicroApps([
+    {
+      name: 'chartsPage', // app name registered
+      entry: '//localhost:9527/charts.html',
+      // entry: { scripts: ['//localhost:9527/static/js/charts.js'] },
+      container: '#subapp-viewport',
+      activeRule: (location) => {
+        const isActive = location.hash.startsWith('#/charts')
+        console.log('chartsPage isActive', isActive, Date.now())
+        return isActive
+      }
+    },
+    {
+      name: 'componentsPage', // app name registered
+      entry: '//localhost:9527/components.html',
+      // entry: { scripts: ['//localhost:9527/static/js/components.js'] },
+      container: '#subapp-viewport',
+      activeRule: (location) => {
+        const isActive = location.hash.startsWith('#/components')
+        console.log('componentsPage isActive', isActive, Date.now())
+        return isActive
+      }
+    },
+    {
+      name: 'nestedPage', // app name registered
+      entry: '//localhost:9527/nested.html',
+      // entry: { scripts: ['//localhost:9527/static/js/nested.js'] },
+      container: '#subapp-viewport',
+      activeRule: (location) => {
+        const isActive = location.hash.startsWith('#/nested')
+        console.log('nestedPage isActive', isActive, Date.now())
+        return isActive
+      }
+    },
+    {
+      name: 'tablePage', // app name registered
+      entry: '//localhost:9527/table.html',
+      // entry: { scripts: ['//localhost:9527/static/js/table.js'] },
+      container: '#subapp-viewport',
+      activeRule: (location) => {
+        const isActive = location.hash.startsWith('#/table')
+        console.log('tablePage isActive', isActive, Date.now())
+        return isActive
+      }
+    }
+  ])
+} catch (e) {
+  console.error('注册/启动子应用失败')
+}

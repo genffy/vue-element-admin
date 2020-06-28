@@ -14,7 +14,7 @@ import '@/styles/index.scss' // global css
 
 import App from './App'
 import store from '../../store'
-import router from './route'
+import routes from './route'
 
 import '../../icons' // icon
 import '../../permission' // permission control
@@ -47,39 +47,67 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.productionTip = false
 
-Vue.use(Router)
 const page_id = '#page-charts'
 
-const SubApp = new Vue({
-  // el: page_id,
-  router,
-  store,
-  render: h => h(App)
-})
+let router = null
+let instance = null
 
-// if (typeof window !== 'undefined' && !window.__POWERED_BY_QIANKUN__) {
-//   SubApp.$mount(page_id)
-// }
+function render(props = {}) {
+  const { container } = props
+  router = new Router({
+    // base: window.__POWERED_BY_QIANKUN__ ? '/vue' : '/',
+    // mode: 'history',
+    scrollBehavior: () => ({ y: 0 }),
+    routes
+  })
+
+  instance = new Vue({
+    router,
+    store,
+    render: h => h(App)
+  }).$mount(container ? container.querySelector(page_id) : page_id)
+}
+
+if (!window.__POWERED_BY_QIANKUN__) {
+  render()
+}
+function storeTest(props) {
+  props.onGlobalStateChange &&
+    props.onGlobalStateChange(
+      (value, prev) => console.log(`[onGlobalStateChange - ${props.name}]:`, value, prev),
+      true
+    )
+  props.setGlobalState &&
+    props.setGlobalState({
+      ignore: props.name,
+      user: {
+        name: props.name
+      }
+    })
+}
 /**
  * bootstrap 只会在微应用初始化的时候调用一次，下次微应用重新进入时会直接调用 mount 钩子，不会再重复触发 bootstrap。
  * 通常我们可以在这里做一些全局变量的初始化，比如不会在 unmount 阶段被销毁的应用级别的缓存等。
  */
 export async function bootstrap() {
-  console.log('react app bootstraped')
+  console.log('[vue] vue app bootstraped')
 }
 /**
  * 应用每次进入都会调用 mount 方法，通常我们在这里触发应用的渲染方法
  */
 export async function mount(props) {
-  setTimeout(() => {
-    SubApp.$mount(page_id)
-  }, 1000)
+  console.log('[vue] props from main framework', props)
+  storeTest(props)
+  render(props)
 }
 /**
  * 应用每次 切出/卸载 会调用的方法，通常在这里我们会卸载微应用的应用实例
  */
 export async function unmount() {
-  SubApp.$destroy()
+  instance.$destroy()
+  instance.$el.innerHTML = ''
+  instance = null
+  router = null
 }
 /**
  * 可选生命周期钩子，仅使用 loadMicroApp 方式加载微应用时生效

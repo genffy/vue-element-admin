@@ -1,19 +1,10 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <template v-if="isSubApp">
-        <div>
-          <div id="page-charts" />
-          <div id="page-components" />
-          <div id="page-nested" />
-          <div id="page-table" />
-        </div>
-      </template>
-      <template v-else>
-        <keep-alive :include="cachedViews">
-          <router-view :key="key" />
-        </keep-alive>
-      </template>
+      <div v-if="isSubApp" id="subapp-viewport" />
+      <keep-alive v-else :include="cachedViews">
+        <router-view :key="key" />
+      </keep-alive>
     </transition>
   </section>
 </template>
@@ -23,7 +14,7 @@ export default {
   name: 'AppMain',
   data() {
     return {
-      isSubApp: false
+      isSubApp: true
     }
   },
   computed: {
@@ -33,14 +24,6 @@ export default {
     key() {
       return this.$route.path
     }
-    // isSubApp() {
-    //   const hash = window.location.hash || ''
-    //   const isSub = ['charts', 'components', 'nested', 'table'].some(key => {
-    //     return hash.startsWith(`#/${key}`)
-    //   })
-    //   console.log('isSub', isSub)
-    //   return isSub
-    // }
   },
   watch: {
     $route() {
@@ -48,8 +31,8 @@ export default {
       const isSub = ['charts', 'components', 'nested', 'table'].some(key => {
         return hash.startsWith(`#/${key}`)
       })
-      console.log('isSub', isSub)
       this.isSubApp = isSub
+      console.log('isSub', isSub, Date.now())
     }
   }
 }
