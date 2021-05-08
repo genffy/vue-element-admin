@@ -1,6 +1,6 @@
 // import Vue from 'vue'
 // import Router from 'vue-router'
-import routerConf from '../../router/modules/nested'
+import routerConf from '@/router/modules/nested'
 import App from './App'
 routerConf.component = App
 // Vue.use(Router)
